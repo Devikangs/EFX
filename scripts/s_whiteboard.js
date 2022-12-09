@@ -3,7 +3,7 @@ const fs = require("fs");
 const config = require("./config/config");
 const { getSafeFilePath } = require("./utils");
 const FILE_DATABASE_FOLDER = "savedBoards";
-const efxfilepath = "/home/ec2-user/appdata";
+const efxfilepath = "/home/ec2-user/appdata/data.txt";
 
 var savedBoards = {};
 var savedUndos = {};
