@@ -3,7 +3,7 @@ const fs = require("fs");
 const config = require("./config/config");
 const { getSafeFilePath } = require("./utils");
 const FILE_DATABASE_FOLDER = "savedBoards";
-const efxfilepath = "/home/ec2-user/appdata/data.txt";
+const efxfilepath = "/home/ec2-user/appdata";
 
 var savedBoards = {};
 var savedUndos = {};
@@ -24,7 +24,13 @@ if (config.backend.enableFileDatabase) {
  * @throws {Error} if wid contains potentially unsafe directory characters
  */
 function fileDatabasePath(wid) {
+  console.log("file wid value", wid);
   return getSafeFilePath(FILE_DATABASE_FOLDER, wid + ".json");
+}
+
+function efsDatabasePath(wid) {
+  console.log("efs wid value", wid);
+  return getSafeFilePath(efxfilepath, wid + ".json");
 }
 
 module.exports = {
@@ -144,7 +150,7 @@ module.exports = {
               }
             );
             fs.writeFile(
-              efxfilepath,
+              efsDatabasePath(wid),
               JSON.stringify(savedBoards[wid]),
               (err) => {
                 if (err) {
@@ -170,9 +176,11 @@ module.exports = {
     if (config.backend.enableFileDatabase) {
       //read saved board from file
       var filePath = fileDatabasePath(wid);
+      var efsPath = efsDatabasePath(wid);
       if (fs.existsSync(filePath)) {
         var data = fs.readFileSync(filePath);
-        var dataefs = fs.readFileSync(efxfilepath);
+        console.log("data hi", data);
+        var dataefs = fs.readFileSync(efsPath);
         console.log("Hello");
         console.log("dataefs", dataefs);
         if (data) {
